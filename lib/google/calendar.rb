@@ -234,7 +234,7 @@ module Google
     #   a hash with a next_sync_token plus an array of events if many found.
     #
     def initial_sync
-      sync_event_lookup('', nil, nil)
+      sync_future_events()
     end
 
     #
@@ -314,6 +314,12 @@ module Google
       formatted_start_min = encode_time(Time.now)
       query = "?timeMin=#{formatted_start_min}#{parse_options(options)}"
       event_lookup(query)
+    end
+
+    def sync_future_events(options={})
+      formatted_start_min = encode_time(Time.now)
+      query = "?timeMin=#{formatted_start_min}#{parse_options(options)}"
+      sync_event_lookup(query, nil, nil)
     end
 
     #
