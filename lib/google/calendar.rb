@@ -234,7 +234,7 @@ module Google
     #   a hash with a next_sync_token plus an array of events if many found.
     #
     def initial_sync
-      sync_future_events()
+      sync_future_events('', nil, nil)
     end
 
     #
@@ -252,7 +252,7 @@ module Google
     #
     def incremental_sync(sync_token: '', page_token: nil)
       page_token_string = page_token == nil ? '' : "&pageToken=#{page_token}"
-      sync_event_lookup("?syncToken=#{sync_token}#{page_token_string}", sync_token, page_token)
+      sync_future_events("?syncToken=#{sync_token}#{page_token_string}", sync_token, page_token)
     end
 
     #
@@ -310,16 +310,16 @@ module Google
     #   an array with one element if only one found.
     #   an array of events if many found.
     #
-    def find_future_events(options={})
+    def find_future_events()
       formatted_start_min = encode_time(Time.now)
-      query = "?timeMin=#{formatted_start_min}#{parse_options(options)}"
+      query = "?timeMin=#{formatted_start_min}"
       event_lookup(query)
     end
 
-    def sync_future_events(options={})
+    def sync_future_events(query, sync_token, page_token)
       formatted_start_min = encode_time(Time.now)
-      query = "?timeMin=#{formatted_start_min}#{parse_options(options)}"
-      sync_event_lookup(query, nil, nil)
+      lookup_query = (query != nil && query != '') ? query : "?timeMin=#{formatted_start_min}"
+      sync_event_lookup(lookup_query, sync_token, page_token)
     end
 
     #
