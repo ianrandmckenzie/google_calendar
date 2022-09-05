@@ -318,7 +318,7 @@ module Google
 
     def sync_future_events(query, sync_token, page_token)
       formatted_start_min = encode_time(Time.now)
-      lookup_query = (query != nil && query != '') ? query : "?timeMin=#{formatted_start_min}"
+      lookup_query = (query != nil && query != '') ? query : "?maxResults=10&timeMin=#{formatted_start_min}"
       sync_event_lookup(lookup_query, sync_token, page_token)
     end
 
